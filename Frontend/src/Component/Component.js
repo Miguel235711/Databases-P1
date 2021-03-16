@@ -6,15 +6,16 @@ import div from '../../js/tags/div.js'
 //example component
 
 export default ()=>{
+    let counter = 0
+    let instance = undefined
+    let parent = undefined  
     let SetState = (callback)=>{ ///extrapolate functionality later
         let old = instance
+        console.log(`instance: ${instance}`)
         parent.replaceChild(main(),old)
         callback()
     }
     
-    let counter = 0
-    let instance = undefined
-    let parent = undefined  
     let main = () => { 
         //({element,childrenFunctions})
         instance = setChildren({
