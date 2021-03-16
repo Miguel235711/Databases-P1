@@ -46,6 +46,31 @@ begin
 end //
 delimiter ;
 
+-- 7. Stored procedure to delete Exam
+delimiter //
+create procedure DeleteExam(examId int unsigned)
+begin
+    delete from Exam
+        where id = examId;
+end //
+delimiter ;
+-- 8. Stored procedure to delete Question
+delimiter //
+create procedure DeleteQuestion(questionId int unsigned)
+begin
+    delete from Question
+        where id = questionId;
+end //
+delimiter ;
+-- 9. Stored procedure to delete Answer
+delimiter //
+create procedure DeleteAnswer(answerId int unsigned)
+begin
+    delete from Answer
+        where id = answerId;
+end //
+delimiter ;
+
 
 -- Testing stored procedures
 
@@ -60,3 +85,5 @@ call AddAnswerToQuestion('testing answer incorrect',1,4,0);
 call GetAllExams();
 call GetQuestionsFromExam(1);
 call GetAnswersFromQuestion(3);
+
+call DeleteExam(3);

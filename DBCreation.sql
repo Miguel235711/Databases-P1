@@ -15,7 +15,7 @@ create table Question(
     ord int unsigned,
     examId int unsigned,
     type varchar(4), -- mult,sele,open
-    foreign key (examId) references Exam(id)
+    foreign key (examId) references Exam(id) on delete cascade
 );
 
 create table Answer(
@@ -24,7 +24,7 @@ create table Answer(
     ord int unsigned,
     questionId int unsigned,
     isRight boolean,
-    foreign key (questionId) references Question(id)
+    foreign key (questionId) references Question(id) on delete cascade
 );
 
 -- default data population for testing
