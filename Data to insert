@@ -1,0 +1,88 @@
+Exam
+    {
+        id:0,
+        name: "Exam1"
+    }
+    {
+        id:1,
+        name: "Exam2"
+    }
+Question:
+   {
+        id: 0,
+        description: "¿Cuánto es 3+2?",
+        ord: 1,
+        examId:0,
+        type: "open"
+   },
+   {
+        id: 1,
+        description: "¿Quién descubrió E=mc^2?",
+        ord: 0,
+        examId:0,
+        type: "mult"
+   },
+   {
+       id: 2,
+       description: "¿Cuáles son estaciones del año?",
+       ord: 2,
+       examId:1,
+       type: "sele"
+   }
+Answer:
+   {
+       id:0,
+       description: "Albert Einstein",
+       ord:2,
+       questionId:1,
+       isRight:1
+   },
+   {
+       id:1,
+       description: "Marie Curie",
+       ord:0,
+       questionId:1,
+       isRight:0
+   }
+   {
+       id:2,
+       description: "Isaac Newton",
+       ord:1,
+       questionId:1,
+       isRight:0
+   },
+   {
+       id:3,
+       description: "Steven Segal",
+       ord:3,
+       questionId:1,
+       isRight:0
+   },
+   {
+       id:4,
+       description: "Verano",
+       ord:0,
+       questionId:2,
+       isRight:1
+   },
+   {
+       id:5,
+       description: "Solsticio",
+       ord:1,
+       questionId:2,
+       isRight:0
+   },
+   {
+       id:6,
+       description: "Invierno",
+       ord:2,
+       questionId:2,
+       isRight:1
+   },
+   {
+       id:7,
+       description: "Eclipse",
+       ord:3,
+       questionId:2,
+       isRight:0
+   }
