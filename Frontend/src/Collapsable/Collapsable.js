@@ -4,11 +4,15 @@ import div from '../../js/tags/div.js'
 import a from '../../js/tags/a.js'
 import p from '../../js/tags/p.js'
 import button from '../../js/tags/button.js'
+import select from '../../js/tags/select.js'
+import option from '../../js/tags/option.js'
+import span from '../../js/tags/span.js'
 
+import {getRandomStateId} from '../../js/transformers/random.js'
 
 //example component
 
-export default () =>{
+export default (selectOptions,question) =>{
     let counter = 0
     let instance = undefined
     let parent = undefined  
@@ -19,19 +23,42 @@ export default () =>{
         parent.replaceChild(main(),old)
         callback()
     }
-    
+    let idG = `${getRandomStateId()}${question.id}`
     let main = () => { 
         //({element,childrenFunctions})
+        let id = 
         instance = setChildren({
             element: div()(),
             childrenFunctions: [
-                p({childrenFunctions:[
-                    a({text:'Link with href',classes:['btn','btn-primary'],data_toggle:'collapse',href:'#collapseExample',role:'button',aria_expanded:'false',aria_controls:'collapseExample'}),
-                    button({text:'Button with data target',classes:['btn','btn-primary'],type:'button',data_toggle:'collapse',data_target:'#collapseExample',aria_expanded:'false',aria_controls:'collapseExample'})
-                ]}),
-                div({classes:['collapse'],id:'collapseExample',childrenFunctions:[
-                    div({classes:['card','card-body'],text:'Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident.'})
-                ]})
+                select({
+                    childrenFunctions: selectOptions.map(optionItem=>option({text:optionItem.showName})),
+                    classes:['form-select']
+                }),
+                span({text:question.description}),
+                question.answers && !question.answers.length==0 ?
+                    button({text:'Mostrar más',classes:['btn','btn-primary'],type:'button',data_toggle:'collapse',data_target:`#${idG}`,aria_expanded:'false',aria_controls:idG})
+                    : span({}),
+                button({text:'Agregar',classes:['btn','btn-primary'],type:'button'}),
+                button({text:'Borrar',classes:['btn','btn-primary'],type:'button'}),
+                question.answers && !question.answers.length==0 ?
+                    div({classes:['collapse'],id:idG,childrenFunctions:[
+                        span({classes:['card','card-body'],childrenFunctions:
+                            question.answers.map((answer,index)=>
+                                div({childrenFunctions:[
+                                    span({text:answer.description}),
+                                    button({text:'Agregar',classes:['btn','btn-primary'],type:'button'}),
+                                    button({text:'Borrar',classes:['btn','btn-primary'],type:'button',click:()=>{
+                                        question.answers.splice(index,1)
+                                        SetState(()=>{
+                                            if(question.answers && !question.answers.length==0)
+                                                $(`#${idG}`).collapse('toggle')
+                                        })
+                                    }})
+                                ]})
+                            )
+                        })
+                    ]})
+                    : span({})
             ]        
         })
         return instance

@@ -34,13 +34,39 @@ let exams = [
             id:1,
             description:'¿Cuánto es 3+2?',
             ord:1,
-            type: 'open'
+            type: 'open',
         },
         {
             id:2,
             description:'¿Quién descubrió E=mc^2?',
             ord:0,
-            type:'mult'
+            type:'mult',
+            answers:[
+                {
+                    description:'Albert Einstein',
+                    ord:2,
+                    questionId:1,
+                    isRight:1  
+                },
+                {
+                    description:'Marie Curie',
+                    ord:0,
+                    questionId:1,
+                    isRight:0  
+                },
+                {
+                    description:'Isaac Newton',
+                    ord:1,
+                    questionId:1,
+                    isRight:0  
+                },
+                {
+                    description:'Steven Seagal',
+                    ord:3,
+                    questionId:1,
+                    isRight:0 
+                },
+            ]
         }
     ]},
     {id:2,name:'Exam2',questions:[
@@ -132,7 +158,17 @@ let main = ()=> {
                         SetState(()=>{})
                     }}),
                     h2({text:examForDetails.name}),
-                    Collapsable()(detailsDiv),
+                    ...examForDetails.questions.map(question=>
+                        Collapsable(
+                            [
+                                {showName:'Opción Multiple',name:'mult'},
+                                {showName:'Selección Multiple',name:'sele'},
+                                {showName:'Abierta',name:'open'}
+                            ],
+                            question
+                        )(detailsDiv),
+                    ),
+                        
                ]}),
                /*script({src:'https://code.jquery.com/jquery-3.2.1.slim.min.js',integrity:'sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN',crossorigin:'anonymous'}),
                script({src:'https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js',integrity:'sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q',crossorigin:'anonymous'}),
