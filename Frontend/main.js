@@ -19,18 +19,7 @@ import Component from './src/Component/Component.js'
 import Collapsable from './src/Collapsable/Collapsable.js'
 
 
-axios.get('http://localhost:5001/p1-databases/us-central1/exams-api')
-  .then(function (response) {
-    // handle success
-    console.log(response);
-  })
-  .catch(function (error) {
-    // handle error
-    console.log(error);
-  })
-  .then(function () {
-    // always executed
-  });
+
 
 let SetState = (callback)=>{
     console.log('SetState')
@@ -40,7 +29,8 @@ let SetState = (callback)=>{
 
 let body = document.querySelector('body')
 let examNameHolder = valueHolder('')
-let exams = [
+let exams = []
+/*let exams = [
     {id:1,name:'Exam1',questions:[
         {
             id:1,
@@ -85,6 +75,24 @@ let exams = [
 
     ]}
 ]
+*/
+const examsAPIEndpoint = 'http://localhost:5001/p1-databases/us-central1/exams-api'
+axios.get(examsAPIEndpoint)
+  .then(function (response) {
+    // handle success
+    //console.log(response);
+    exams = response.data.data
+    SetState(()=>{
+        console.log('data got')
+    })
+  })
+  .catch(function (error) {
+    // handle error
+    //console.log(error);
+  })
+  .then(function () {
+    // always executed
+  });
 let showExamDetails = false
 let examForDetails = undefined
 /*let enrollmentHolder = valueHolder('')
@@ -138,9 +146,17 @@ let main = ()=> {
                                             alert('El nombre del examen no puede estar vacío')
                                             return; 
                                         }
-                                        exams.splice(index+1,0,{id:exams.length+1,name:examName})
-                                        console.log(exams.length)
-                                        SetState(()=>{})
+                                        axios.post(examsAPIEndpoint, {
+                                            name:examName,
+                                        }).catch(error=>{
+                                            alert('Error al agregar')
+                                        }).then(result=>{
+                                            exams.splice(index+1,0,{id:exams.length+1,name:examName})
+                                            console.log(exams.length)
+                                            SetState(()=>{
+                                                alert('Examen agregado')
+                                            })
+                                        })
                                     }
                                 })
                             }}),
@@ -154,8 +170,19 @@ let main = ()=> {
                                     cancelButtonText: 'Cancelar'
                                 }).then(result=>{
                                     if(result.dismiss!='cancel'){
-                                        exams.splice(index,1)
-                                    SetState(()=>{})
+                                        axios.delete(examsAPIEndpoint,{
+                                            params:{
+                                                id: exam.id
+                                            }
+                                        }).catch(error=>{
+                                            alert('¡Borrado falló!')
+                                        }).then(result=>{
+                                            exams.splice(index,1)
+                                            SetState(()=>{
+                                                alert('¡Borrado exitoso!')
+                                            })
+                                        })
+                                            
                                     }
                                 })   
                             }})
