@@ -56,9 +56,11 @@ export
   const addExam = async(req:Request,res:Response)=>{
     const db = await getDbConnection();
     try{
-      await db.query(`call CreateExam('${req.body.name}');`);
+      const result = await db.query(`call CreateExam('${req.body.name}');`);
+      //console.log(`result of addExam ${result[0][0].id}`)
       res.json({
-        result: 'Examen agregado exitosamente'
+        result: 'Examen agregado exitosamente',
+        id: result[0][0].id
       })
     }catch(e){
       res.json({

@@ -1,25 +1,32 @@
 -- 1. Stored procedure to create an exam
+drop procedure if exists CreateExam;
 delimiter //
 create procedure CreateExam(name text)
 begin
-    insert into Exam value(0,name);
+    insert into Exam(name) value(name);
+    select last_insert_id() id;
 end //
 delimiter ;
 -- 2. Stored procedure to add a question to an exam
+drop procedure if exists AddQuestionToExam;
 delimiter //
-create procedure AddQuestionToExam(descriptionIn text,ordIn int unsigned,examIdIn int unsigned,typeIn varchar(4))
+create procedure AddQuestionToExam(descriptionIn text,examIdIn int unsigned,typeIn varchar(4))
 begin
-    insert into Question value(0,descriptionIn,ordIn,examIdIn,typeIn);
+    insert into Question(description,examId, type) value(descriptionIn,examIdIn,typeIn);
+    select last_insert_id() id;
 end //
 delimiter ;
 -- 3. Stored procedure to add an answer to a question
+drop procedure if exists AddAnswerToQuestion;
 delimiter //
-create procedure AddAnswerToQuestion(descriptionIn text,ordIn int unsigned,questionIdIn int unsigned,isRightIn boolean)
+create procedure AddAnswerToQuestion(descriptionIn text,questionIdIn int unsigned,isRightIn boolean)
 begin
-    insert into Answer value(0,descriptionIn,ordIn,questionIdIn,isRightIn);
+    insert into Answer(description, questionId, isRight) value(descriptionIn,questionIdIn,isRightIn);
+    select last_insert_id() id;
 end //
 delimiter ;
 -- 4. Stored procedure to get ALL the exams
+drop procedure if exists GetAllExams;
 delimiter //
 create procedure GetAllExams()
 begin
@@ -28,25 +35,26 @@ end //
 delimiter ;
 
 -- 5. Stored procedure to get ALL the questions from an exam
+drop procedure if exists GetQuestionsFromExam;
 delimiter //
 create procedure GetQuestionsFromExam(examId int unsigned)
 begin
     select * from Question
-        where Question.examId = examId
-        order by ord;
+        where Question.examId = examId;
 end //
 delimiter ;
 -- 6. Stored procedure to get ALL the answers from question
+drop procedure if exists GetAnswersFromQuestion;
 delimiter //
 create procedure GetAnswersFromQuestion(questionId int unsigned)
 begin
     select * from Answer
-        where Answer.questionId = questionId
-        order by ord;
+        where Answer.questionId = questionId;
 end //
 delimiter ;
 
 -- 7. Stored procedure to delete Exam
+drop procedure if exists DeleteExam;
 delimiter //
 create procedure DeleteExam(examId int unsigned)
 begin
@@ -55,6 +63,7 @@ begin
 end //
 delimiter ;
 -- 8. Stored procedure to delete Question
+drop procedure if exists DeleteQuestion;
 delimiter //
 create procedure DeleteQuestion(questionId int unsigned)
 begin
@@ -63,6 +72,7 @@ begin
 end //
 delimiter ;
 -- 9. Stored procedure to delete Answer
+drop procedure if exists DeleteAnswer;
 delimiter //
 create procedure DeleteAnswer(answerId int unsigned)
 begin

@@ -48,19 +48,24 @@ const getQuestionsFromExam = async(req: Request, res:Response) => { //fix gettin
     res.json({
       result: 'Preguntas obtenidas exitosamente',
       data: rows[0].map((row:any)=>{
-        return {id:row.id,description:row.description,ord:row.ord,examId:row.examId,type:row.type}
+        return {id:row.id,description:row.description,examId:row.examId,type:row.type}
       })
     })
 }
 export 
   const addQuestionToExam = async(req:Request,res:Response)=>{
     const db = await getDbConnection();
+    console.log('addQuestionToExam')
     try{
-      await db.query(`call AddQuestionToExam('${req.body.description}',${req.query.ordIn},${req.query.examId},'${req.query.type}');`);
+      //console.log(JSON.stringify(req))
+      const result = await db.query(`call AddQuestionToExam('${req.body.description}',${req.query.examId},'${req.query.type}');`);
+      console.log(result[0][0].id)
       res.json({
-        result: 'Pregunta agregada exitosamente'
+        result: 'Pregunta agregada exitosamente',
+        id: result[0][0].id
       })
     }catch(e){
+      console.log(e)
       res.json({
         result: 'Error al tratar de agregar pregunta',
         status:500
@@ -71,9 +76,11 @@ export
   const deleteQuestion = async (req:Request,res:Response)=>{
     const db = await getDbConnection();
     try{
+      console.log(`delete Id: ${req.query.id})`)
       await db.query(`call DeleteQuestion(${req.query.id})`)
       res.json({
-        result: 'Pregunta borrada exitosamente'
+        result: 'Pregunta borrada exitosamente',
+
       })
     }catch(e){
       res.json({

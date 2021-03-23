@@ -48,7 +48,7 @@ const getAnswersFromQuestion = async(req: Request, res:Response) => { //fix gett
     res.json({
       result: 'Respuestas obtenidas exitosamente',
       data: rows[0].map((row:any)=>{
-        return {id:row.id,description:row.description,ord:row.ord,questionId:row.questionId,isRight:row.isRight}
+        return {id:row.id,description:row.description,questionId:row.questionId,isRight:row.isRight}
       })
     })
 }
@@ -56,9 +56,10 @@ export
   const addAnswerToQuestion = async(req:Request,res:Response)=>{
     const db = await getDbConnection();
     try{
-      await db.query(`call AddAnswerToQuestion('${req.body.description}',${req.query.ord},${req.query.questionId},${req.query.isRight});`);
+      const result = await db.query(`call AddAnswerToQuestion('${req.body.description}',${req.query.questionId},${req.query.isRight});`);
       res.json({
-        result: 'Respuesta agregada exitosamente'
+        result: 'Respuesta agregada exitosamente',
+        id: result[0][0].id
       })
     }catch(e){
       res.json({

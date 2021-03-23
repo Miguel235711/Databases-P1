@@ -1,12 +1,14 @@
 import tag from './tag.js'
 import {setChildren} from '../../js/transformers/ref.js'
 
-export default ({classes,id,name,value,text,aria_label,childrenFunctions}={}) => ()=>{
+export default ({classes,id,name,value,text,aria_label,childrenFunctions,selectedIndex}={}) => ()=>{
     let _select = tag('select',{classes:classes,id:id,value:value,text:text})()
     if(name)
         _select.setAttribute('name',name)
     if(aria_label)
         _select.setAttribute('aria-label',aria_label)
+    if(selectedIndex)
+        _select.setAttribute('selectedIndex',selectedIndex)
     //console.log('children functions ',childrenFunctions)
     //return _select
     if(childrenFunctions)
