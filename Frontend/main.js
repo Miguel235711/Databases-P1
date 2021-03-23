@@ -15,10 +15,22 @@ import {withChildrenF} from './js/transformers/ref.js'
 import {valueHolder,selectHolder,bindChangeListenerToHolderBiIndex,bindListenerToHolderBiValue} from './js/binding/bind.js'
 import form from './js/tags/form.js'
 
-
 import Component from './src/Component/Component.js'
 import Collapsable from './src/Collapsable/Collapsable.js'
 
+
+axios.get('http://localhost:5001/p1-databases/us-central1/exams-api')
+  .then(function (response) {
+    // handle success
+    console.log(response);
+  })
+  .catch(function (error) {
+    // handle error
+    console.log(error);
+  })
+  .then(function () {
+    // always executed
+  });
 
 let SetState = (callback)=>{
     console.log('SetState')
