@@ -54,7 +54,7 @@ export default (selectOptions,parentArray,question) =>{
         parent.removeChild(instance)
         callback()
     }
-    let idG = `${getRandomStateId()}${question.id}`
+    let idG = `q_${getRandomStateId()}${question.id}`
     let main = () => { 
         //({element,childrenFunctions})
         //console.log(selectOptions.findIndex((option)=>question.type==option.name))
