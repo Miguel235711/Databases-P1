@@ -1,6 +1,6 @@
 import {setClasses,setId} from '../transformers/ref.js'
 
-export default (tagName,{classes,id,text,click,value,border,href,data_toggle,role,aria_expanded,aria_controls,type,data_target,src}={}) => () =>{
+export default (tagName,{classes,id,text,click,value,border,href,data_toggle,role,aria_expanded,aria_controls,type,data_target,src,style}={}) => () =>{
     let _tag = document.createElement(tagName)
     if(classes)
         //(element,classes)
@@ -33,5 +33,7 @@ export default (tagName,{classes,id,text,click,value,border,href,data_toggle,rol
         _tag.setAttribute('data-target',data_target)
     if(src)
         _tag.setAttribute('src',src)
+    if(style)
+        _tag.setAttribute('style',style)
     return _tag
 }

@@ -8,6 +8,8 @@ import select from '../../js/tags/select.js'
 import option from '../../js/tags/option.js'
 import span from '../../js/tags/span.js'
 import img from '../../js/tags/img.js'
+import li from '../../js/tags/li.js'
+
 
 import {getRandomStateId} from '../../js/transformers/random.js'
 import {valueHolder,selectHolder,bindChangeListenerToHolderBiIndex,bindListenerToHolderBiValue,
@@ -57,9 +59,10 @@ export default (selectOptions,parentArray,question) =>{
         //({element,childrenFunctions})
         //console.log(selectOptions.findIndex((option)=>question.type==option.name))
         instance = setChildren({
-            element: div()(),
+            element: li()(),
             childrenFunctions: [
                 span({text:selectOptions.find((option)=>question.type==option.name).showName, classes:["questionType"]}),
+                question.type !='open' && (!question.answers || question.answers.length<2) ? span({text:'Debes agregar al menos 2 respuestas',style:'background-color:red;'}):span(),
                 span({text:question.description}),
                 question.answers && !question.answers.length==0 ?
                     button({text:'Mostrar más/menos',classes:['btn','btn-primary'],type:'button',data_toggle:'collapse',data_target:`#${idG}`,aria_expanded:'false',aria_controls:idG})
@@ -92,6 +95,10 @@ export default (selectOptions,parentArray,question) =>{
                             const description = answerHolder.value
                             if(!/\S/.test(description)){
                                 alert('El campo descripción no puede estar vacío')
+                                return
+                            }
+                            if(question.answers.length>=5){
+                                alert('No puede haber más de 5 respuestas por pregunta')
                                 return
                             }
                             if(isCorrectHolder.checked&&question.type=='mult'){

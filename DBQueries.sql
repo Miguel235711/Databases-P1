@@ -80,6 +80,19 @@ begin
         where id = answerId;
 end //
 delimiter ;
+drop trigger if exists limitAnswers;
+delimiter //
+create trigger limitAnswers
+before insert on Answer
+for each row
+begin
+    declare amount int;
+    select count(*) into amount from Answer where questionId = NEW.questionId;
+    if amount >= 5 then
+        signal sqlstate '45000' set message_text = 'No pueden haber más de 5 respuestas por pregunta';
+    end if;
+    -- 45000 is the exception code for user-defined exceptionss
+end //
 
 
 -- Testing stored procedures

@@ -10,6 +10,7 @@ import option from './js/tags/option.js'
 import h1 from './js/tags/h1.js'
 import h2 from './js/tags/h2.js'
 import script from './js/tags/script.js'
+import ol from './js/tags/ol.js'
 
 import {withChildrenF} from './js/transformers/ref.js'
 import {valueHolder,selectHolder,bindChangeListenerToHolderBiIndex,bindListenerToHolderBiValue} from './js/binding/bind.js'
@@ -219,6 +220,7 @@ let main = ()=> {
     //({element,childrenFunctions})
     console.log('main called')
     let detailsDiv = div()()
+    let orderedList = ol()()
     setChildren({
         element: body,
         childrenFunctions: [
@@ -295,13 +297,15 @@ let main = ()=> {
                     }}),
                     h2({text:examForDetails.name}),
                     addQuestionButton(),
-                    ...examForDetails.questions.map(question=>
-                        Collapsable(
-                            questionTypes,
-                            examForDetails.questions,
-                            question
-                        )(detailsDiv),
-                    ),
+                    ()=>setChildren({element:orderedList,childrenFunctions:
+                        examForDetails.questions.map(question=>
+                            Collapsable(
+                                questionTypes,
+                                examForDetails.questions,
+                                question
+                            )(orderedList),
+                        ),
+                    })
                         
                ]}),
                /*script({src:'https://code.jquery.com/jquery-3.2.1.slim.min.js',integrity:'sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN',crossorigin:'anonymous'}),
