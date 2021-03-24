@@ -9,6 +9,8 @@ import option from '../../js/tags/option.js'
 import span from '../../js/tags/span.js'
 
 import {getRandomStateId} from '../../js/transformers/random.js'
+import {valueHolder,selectHolder,bindChangeListenerToHolderBiIndex,bindListenerToHolderBiValue} from '../../js/binding/bind.js'
+import input from '../../js/tags/input.js'
 
 //example component
 
@@ -19,6 +21,12 @@ export default (selectOptions,parentArray,question) =>{
     let counter = 0
     let instance = undefined
     let parent = undefined  
+
+    let answerHolder = valueHolder('')
+    let isCorrect = valueHolder('')
+
+    let correct = false
+
     let SetState = (callback)=>{ ///extrapolate functionality later
         let old = instance
         console.log(`instance: ${instance}`)
@@ -42,7 +50,33 @@ export default (selectOptions,parentArray,question) =>{
                 question.answers && !question.answers.length==0 ?
                     button({text:'Mostrar más',classes:['btn','btn-primary'],type:'button',data_toggle:'collapse',data_target:`#${idG}`,aria_expanded:'false',aria_controls:idG})
                     : span({}),
-                button({text:'Agregar Respuesta',classes:['btn','btn-primary'],type:'button'}),
+                button({text:'Agregar Respuesta',classes:['btn','btn-primary'],type:'button', click:()=> {
+                    Swal.fire({
+                        title: `Ingresa la respuesta para agregar`,
+                        icon:'question',
+                        html: div({
+                            childrenFunctions:[
+                                    div({
+                                        classes:['input-group-prepend'],
+                                        childrenFunctions:[span({text:'Respuesta: ',classes:['input-group-text']})]
+                                    }),
+                                    bindListenerToHolderBiValue(input({type:'text',arial_label:'Description',aria_describedby:'basic-addon1',classes:['form-control']}),answerHolder,'input'),
+                                    div({
+                                        classes:['input-group-prepend'],
+                                        childrenFunctions:[span({text:'Correcta: ',classes:['input-group-text']})]
+                                    }),
+                                    bindListenerToHolderBiValue(input({type:'checkbox', arial_label:'Description',aria_describedby:'basic-addon1', classes:['form-control']}), isCorrect, 'input')
+                            ],
+                            classes:['input-group','mb-3']
+                        })(),
+                        confirmButtonText:'Agregar',
+                        showCancelButton: true,
+                        allowOutsideClick:false,
+                        cancelButtonText: 'Cancelar'
+                    }).then(result=>{
+                        console.log(isCorrect.checked)
+                    })
+                }}),
                 button({text:'Borrar Pregunta',classes:['btn','btn-primary'],type:'button',click:()=>{
                     Swal.fire({
                         title: `¿Estás seguro de borrar la Pregunta?`,
