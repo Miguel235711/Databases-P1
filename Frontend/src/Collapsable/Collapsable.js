@@ -59,7 +59,7 @@ export default (selectOptions,parentArray,question) =>{
         instance = setChildren({
             element: div()(),
             childrenFunctions: [
-                span({text:selectOptions.find((option)=>question.type==option.name).showName}),
+                span({text:selectOptions.find((option)=>question.type==option.name).showName, classes:["questionType"]}),
                 span({text:question.description}),
                 question.answers && !question.answers.length==0 ?
                     button({text:'Mostrar más',classes:['btn','btn-primary'],type:'button',data_toggle:'collapse',data_target:`#${idG}`,aria_expanded:'false',aria_controls:idG})
