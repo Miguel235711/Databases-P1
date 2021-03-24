@@ -7,23 +7,37 @@ import button from '../../js/tags/button.js'
 import select from '../../js/tags/select.js'
 import option from '../../js/tags/option.js'
 import span from '../../js/tags/span.js'
+import img from '../../js/tags/img.js'
 
 import {getRandomStateId} from '../../js/transformers/random.js'
-import {valueHolder,selectHolder,bindChangeListenerToHolderBiIndex,bindListenerToHolderBiValue} from '../../js/binding/bind.js'
+import {valueHolder,selectHolder,bindChangeListenerToHolderBiIndex,bindListenerToHolderBiValue,
+    bindChangeListenerToHolderBiChecked,checkedHolder} from '../../js/binding/bind.js'
 import input from '../../js/tags/input.js'
 
 //example component
 
 const generalAPIEndpoint = 'http://localhost:5001/p1-databases/us-central1'
 const questionsAPIEndpoint = `${generalAPIEndpoint}/questions-api`
+const answersAPIEndpoint = `${generalAPIEndpoint}/answers-api`
 
 export default (selectOptions,parentArray,question) =>{
+    console.log(`going to get answers`)
+    axios.get(answersAPIEndpoint,{
+        params:{questionId:question.id}
+    }).catch(res=>console.log(`error getting answers for question with id: ${question.id}`))
+    .then(res=>{
+        console.log(res.data.data)  
+        question.answers = res.data.data
+        SetState(()=>{
+            console.log('answer got')
+        })
+    })
     let counter = 0
     let instance = undefined
     let parent = undefined  
 
     let answerHolder = valueHolder('')
-    let isCorrect = valueHolder('')
+    let isCorrectHolder = checkedHolder(false)
 
     let correct = false
 
@@ -50,7 +64,7 @@ export default (selectOptions,parentArray,question) =>{
                 question.answers && !question.answers.length==0 ?
                     button({text:'Mostrar más',classes:['btn','btn-primary'],type:'button',data_toggle:'collapse',data_target:`#${idG}`,aria_expanded:'false',aria_controls:idG})
                     : span({}),
-                button({text:'Agregar Respuesta',classes:['btn','btn-primary'],type:'button', click:()=> {
+                question.type != 'open' ? button({text:'Agregar Respuesta',classes:['btn','btn-primary'],type:'button', click:()=> {
                     Swal.fire({
                         title: `Ingresa la respuesta para agregar`,
                         icon:'question',
@@ -65,7 +79,7 @@ export default (selectOptions,parentArray,question) =>{
                                         classes:['input-group-prepend'],
                                         childrenFunctions:[span({text:'Correcta: ',classes:['input-group-text']})]
                                     }),
-                                    bindListenerToHolderBiValue(input({type:'checkbox', arial_label:'Description',aria_describedby:'basic-addon1', classes:['form-control']}), isCorrect, 'input')
+                                    bindChangeListenerToHolderBiChecked(input({type:'checkbox', arial_label:'Description',aria_describedby:'basic-addon1', classes:['form-control']}), isCorrectHolder)
                             ],
                             classes:['input-group','mb-3']
                         })(),
@@ -74,9 +88,48 @@ export default (selectOptions,parentArray,question) =>{
                         allowOutsideClick:false,
                         cancelButtonText: 'Cancelar'
                     }).then(result=>{
-                        console.log(isCorrect.checked)
+                        if(result.dismiss!='cancel'){
+                            const description = answerHolder.value
+                            if(!/\S/.test(description)){
+                                alert('El campo descripción no puede estar vacío')
+                                return
+                            }
+                            if(isCorrectHolder.checked&&question.type=='mult'){
+                                let rightAnswers = 0
+                                question.answers.forEach(answer=>{
+                                    if(answer.isRight)
+                                        rightAnswers ++
+                                })
+                                if(rightAnswers!=0){
+                                    alert('No puede haber más de una respuesta correcta en preguntas de opción multiple')
+                                    return;
+                                }
+                            }
+                            console.log(isCorrectHolder.checked)
+                            axios.post(answersAPIEndpoint,{
+                                description:answerHolder.value
+                            },{
+                                params:{
+                                    questionId:question.id,
+                                    isRight:isCorrectHolder.checked
+                                }
+                            }).catch(res=>
+                                alert(res.data.result) 
+                            ).then(res=>{
+                                //alert(res.data.result)
+                                question.answers.push({id:res.data.id,description,questionId:question.id,isRight:isCorrectHolder.checked})
+                                console.log(`are answers valid?${question.answers && !question.answers.length}`)
+                                //console.log(exams.length)
+                                answerHolder.setValue('')
+                                isCorrectHolder.setChecked(false)
+                                SetState(()=>{
+                                    alert(res.data.result)
+                                    $(`#${idG}`).collapse('toggle')
+                                })
+                            })
+                        }
                     })
-                }}),
+                }}) : span({}),
                 button({text:'Borrar Pregunta',classes:['btn','btn-primary'],type:'button',click:()=>{
                     Swal.fire({
                         title: `¿Estás seguro de borrar la Pregunta?`,
@@ -104,17 +157,37 @@ export default (selectOptions,parentArray,question) =>{
                         }
                     })
                 }}),
-                question.answers && !question.answers.length==0 ?
+                question.answers && question.answers.length!=0 ?
                     div({classes:['collapse'],id:idG,childrenFunctions:[
                         span({classes:['card','card-body'],childrenFunctions:
                             question.answers.map((answer,index)=>
                                 div({childrenFunctions:[
                                     span({text:answer.description}),
+                                    answer.isRight ? img({src:"https://img.icons8.com/windows/64/000000/--checkmark-yes.png"}):img({src:"https://img.icons8.com/fluent-systems-regular/48/000000/delete-shield--v1.png"}),
                                     button({text:'Borrar Respuesta',classes:['btn','btn-primary'],type:'button',click:()=>{
-                                        question.answers.splice(index,1)
-                                        SetState(()=>{
-                                            if(question.answers && !question.answers.length==0)
-                                                $(`#${idG}`).collapse('toggle')
+                                        Swal.fire({
+                                            title: `¿Estás seguro de borrar la respuesta?`,
+                                            icon:'error',
+                                            confirmButtonText:'Borrar',
+                                            showCancelButton: true,
+                                            allowOutsideClick:false,
+                                            cancelButtonText: 'Cancelar'
+                                        }).then(result=>{
+                                            if(result.dismiss!='cancel'){
+                                                axios.delete(answersAPIEndpoint,{
+                                                    params:{
+                                                        id:answer.id
+                                                    }
+                                                }).catch(res=>alert(res.data.result))
+                                                .then(res=>{
+                                                    question.answers.splice(index,1)
+                                                    SetState(()=>{
+                                                        alert(res.data.result)
+                                                        if(question.answers && !question.answers.length==0)
+                                                            $(`#${idG}`).collapse('toggle')
+                                                    })
+                                                })          
+                                            }
                                         })
                                     }})
                                 ]})

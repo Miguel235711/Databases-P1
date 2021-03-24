@@ -75,6 +75,31 @@ let bindChangeListenerToHolderBiIndex =  (elementFunction,indexHolder,{intercept
         }
         return element
     }
+let checkedHolder = (initialChecked) =>{
+    return {
+        checked:initialChecked,
+        listenerElements:[],
+        setChecked(checked){
+            this.checked = checked 
+            ///listener
+            this.listenerElements.forEach(element=>element.checked=checked)
+        }
+    }
+}
+
+///could be extended to intercept
+
+let bindChangeListenerToHolderBiChecked = (elementFunction, checkedHolder) =>
+    ()=>{
+        let element = elementFunction()
+        element.addEventListener('change',event=>{
+            checkedHolder.setChecked(element.checked)
+        })
+        checkedHolder.listenerElements.push(element)
+        //set html element with checked of checkedHolder
+        element.checked = checkedHolder.checked
+        return element
+    }
 
 
-export{valueHolder,bindListenerToHolderBiValue,selectHolder,bindChangeListenerToHolderBiIndex}
+export{valueHolder,bindListenerToHolderBiValue,selectHolder,bindChangeListenerToHolderBiIndex,checkedHolder,bindChangeListenerToHolderBiChecked}
