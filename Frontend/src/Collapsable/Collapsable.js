@@ -16,9 +16,9 @@ import input from '../../js/tags/input.js'
 
 //example component
 
-const generalAPIEndpoint = 'http://localhost:5001/p1-databases/us-central1'
-const questionsAPIEndpoint = `${generalAPIEndpoint}/questions-api`
-const answersAPIEndpoint = `${generalAPIEndpoint}/answers-api`
+const generalAPIEndpoint = 'https://us-central1-p1-databases.cloudfunctions.net'
+const questionsAPIEndpoint = `${generalAPIEndpoint}/questions`
+const answersAPIEndpoint = `${generalAPIEndpoint}/answers`
 
 export default (selectOptions,parentArray,question) =>{
     console.log(`going to get answers`)
@@ -62,7 +62,7 @@ export default (selectOptions,parentArray,question) =>{
                 span({text:selectOptions.find((option)=>question.type==option.name).showName, classes:["questionType"]}),
                 span({text:question.description}),
                 question.answers && !question.answers.length==0 ?
-                    button({text:'Mostrar más',classes:['btn','btn-primary'],type:'button',data_toggle:'collapse',data_target:`#${idG}`,aria_expanded:'false',aria_controls:idG})
+                    button({text:'Mostrar más/menos',classes:['btn','btn-primary'],type:'button',data_toggle:'collapse',data_target:`#${idG}`,aria_expanded:'false',aria_controls:idG})
                     : span({}),
                 question.type != 'open' ? button({text:'Agregar Respuesta',classes:['btn','btn-primary'],type:'button', click:()=> {
                     Swal.fire({

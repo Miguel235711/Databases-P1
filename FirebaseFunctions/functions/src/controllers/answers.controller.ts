@@ -7,7 +7,7 @@ const getDbConnection = async () => {
     host: 'db-p1.cqlefmcws6vc.us-east-1.rds.amazonaws.com',
     user: 'admin',
     password: 'Xq>qv=4jS+zS7#ML',
-    database: 'dbp1'
+    database: 'dbp1',
   })
 }
 
@@ -49,7 +49,7 @@ const getAnswersFromQuestion = async(req: Request, res:Response) => { //fix gett
       result: 'Respuestas obtenidas exitosamente',
       data: rows[0].map((row:any)=>{
         return {id:row.id,description:row.description,questionId:row.questionId,isRight:row.isRight}
-      })
+      },),
     })
 }
 export 
@@ -59,12 +59,12 @@ export
       const result = await db.query(`call AddAnswerToQuestion('${req.body.description}',${req.query.questionId},${req.query.isRight});`);
       res.json({
         result: 'Respuesta agregada exitosamente',
-        id: result[0][0].id
+        id: result[0][0].id,
       })
     }catch(e){
       res.json({
         result: 'Error al tratar de agregar respuesta',
-        status:500
+        status:500,
       })
     }
   }
@@ -74,12 +74,12 @@ export
     try{
       await db.query(`call DeleteAnswer(${req.query.id})`)
       res.json({
-        result: 'Respuesta borrada exitosamente'
+        result: 'Respuesta borrada exitosamente',
       })
     }catch(e){
       res.json({
         result: 'Error al tratar de eliminar respuesta',
-        status:500
+        status:500,
       })
     }
   }

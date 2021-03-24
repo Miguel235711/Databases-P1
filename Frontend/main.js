@@ -76,9 +76,9 @@ let exams = []
     ]}
 ]
 */
-const generalAPIEndpoint = 'http://localhost:5001/p1-databases/us-central1'
-const questionsAPIEndpoint = `${generalAPIEndpoint}/questions-api`
-const examsAPIEndpoint = `${generalAPIEndpoint}/exams-api`
+const generalAPIEndpoint = 'https://us-central1-p1-databases.cloudfunctions.net'
+const questionsAPIEndpoint = `${generalAPIEndpoint}/questions`
+const examsAPIEndpoint = `${generalAPIEndpoint}/exams`
 let gettingExams = true
 axios.get(examsAPIEndpoint)
   .then(function (response) {
