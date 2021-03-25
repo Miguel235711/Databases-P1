@@ -7,12 +7,9 @@ const cors = require('cors')({ origin: true });
 const allowed: any = {
     GET: questions.getQuestionsFromExam,
     POST: questions.addQuestionToExam,
-    DELETE: questions.deleteQuestion
-    /*GET: orders.getOrders,
-    DELETE: orders.deleteOrders,
-    PUT: orders.finishOrders*/
+    DELETE: questions.deleteQuestion,
 }
-exports.api = functions.https.onRequest((req, res) => {
+export const api = functions.https.onRequest((req, res) => {
     cors(req,res,async()=>{
         if(allowed.hasOwnProperty(req.method))
             await allowed[req.method](req,res)

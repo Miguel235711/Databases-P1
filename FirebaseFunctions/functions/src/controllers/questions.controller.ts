@@ -7,7 +7,7 @@ const getDbConnection = async () => {
     host: 'db-p1.cqlefmcws6vc.us-east-1.rds.amazonaws.com',
     user: 'admin',
     password: 'Xq>qv=4jS+zS7#ML',
-    database: 'dbp1'
+    database: 'dbp1',
   })
 }
 
@@ -49,7 +49,7 @@ const getQuestionsFromExam = async(req: Request, res:Response) => { //fix gettin
       result: 'Preguntas obtenidas exitosamente',
       data: rows[0].map((row:any)=>{
         return {id:row.id,description:row.description,examId:row.examId,type:row.type}
-      })
+      },),
     })
 }
 export 
@@ -62,13 +62,13 @@ export
       console.log(result[0][0].id)
       res.json({
         result: 'Pregunta agregada exitosamente',
-        id: result[0][0].id
+        id: result[0][0].id,
       })
     }catch(e){
       console.log(e)
       res.json({
         result: 'Error al tratar de agregar pregunta',
-        status:500
+        status:500,
       })
     }
   }
@@ -85,7 +85,7 @@ export
     }catch(e){
       res.json({
         result: 'Error al tratar de eliminar pregunta',
-        status:500
+        status:500,
       })
     }
   }

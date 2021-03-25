@@ -7,7 +7,7 @@ const getDbConnection = async () => {
     host: 'db-p1.cqlefmcws6vc.us-east-1.rds.amazonaws.com',
     user: 'admin',
     password: 'Xq>qv=4jS+zS7#ML',
-    database: 'dbp1'
+    database: 'dbp1',
   })
 }
 
@@ -49,7 +49,7 @@ const getExams = async(req: Request, res:Response) => { //fix getting usersIds f
       result: 'Exámenes obtenidos exitosamente',
       data: rows[0].map((row:any)=>{
         return {id:row.id,name:row.name}
-      })
+      },),
     })
 }
 export 
@@ -60,12 +60,12 @@ export
       //console.log(`result of addExam ${result[0][0].id}`)
       res.json({
         result: 'Examen agregado exitosamente',
-        id: result[0][0].id
+        id: result[0][0].id,
       })
     }catch(e){
       res.json({
         result: 'Error al tratar de agregar examen',
-        status:500
+        status:500,
       })
     }
   }
@@ -75,12 +75,12 @@ export
     try{
       await db.query(`call DeleteExam(${req.query.id})`)
       res.json({
-        result: 'Examen borrado exitosamente'
+        result: 'Examen borrado exitosamente',
       })
     }catch(e){
       res.json({
         result: 'Error al tratar de eliminar examen',
-        status:500
+        status:500,
       })
     }
   }
