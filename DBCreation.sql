@@ -1,9 +1,10 @@
+use dbp1;
 
 drop database dbp1;
 create database dbp1;
 use dbp1;
 
-
+drop table User;
 create table User(
     id int unsigned auto_increment primary key,
     handle varchar(15) unique,
@@ -11,6 +12,7 @@ create table User(
     type varchar(4) -- stud,tech
 );
 
+drop table Exam;
 create table Exam(
     id int unsigned auto_increment primary key,
     name text,
@@ -18,6 +20,7 @@ create table Exam(
     foreign key (userId) references User(id)
 );
 
+drop table Result;
 create table Result(
     id int unsigned auto_increment primary key,
     userId int unsigned,
@@ -27,6 +30,7 @@ create table Result(
     foreign key (examId) references Exam(id)
 );
 
+drop table Open;
 create table Open(
     id int unsigned auto_increment primary key,
     resultId int unsigned,
@@ -34,14 +38,16 @@ create table Open(
     foreign key (resultId) references Result(id)
 );
 
-create table Choice(
-    id int unsigned auto_increment primary key ,
+drop table Choice;
+create table Choice
+(
+    id       int unsigned auto_increment primary key,
     resultId int unsigned,
     answerId int unsigned,
-    foreign key (resultId) references Result(id),
-    foreign key (answerId) references Answer(id)
+    foreign key (resultId) references Result (id),
+    foreign key (answerId) references Answer (id)
 );
-
+drop table Question;
 create table Question(
     id int unsigned auto_increment primary key,
     description text,
@@ -50,6 +56,7 @@ create table Question(
     foreign key (examId) references Exam(id) on delete cascade
 );
 
+drop table Answer;
 create table Answer(
     id int unsigned auto_increment primary key,
     description text,
@@ -59,9 +66,9 @@ create table Answer(
 );
 
 -- default data population for testing
-insert into Exam values
-    (0,'Exam1'),
-    (0,'Exam2');
+-- insert into Exam values
+--     (0,'Exam1', ),
+--    (0,'Exam2');
 insert into Question values 
     (0,'¿Cuánto es 3+2?',1,'open'),
     (0,'¿Quién descubrió E=mc^2?',1,'mult'),
