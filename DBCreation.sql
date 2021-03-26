@@ -1,26 +1,27 @@
 use dbp1;
 
-drop database dbp1;
+drop database if exists dbp1;
 create database dbp1;
 use dbp1;
 
-drop table User;
+drop table if exists User;
 create table User(
     id int unsigned auto_increment primary key,
     handle varchar(15) unique,
-    email varchar(256),
+    email varchar(256) unique,
+    password varchar(50),
     type varchar(4) -- stud,tech
 );
 
-drop table Exam;
+drop table if exists Exam;
 create table Exam(
     id int unsigned auto_increment primary key,
     name text,
-    userId int unsigned,
-    foreign key (userId) references User(id)
+    createBy int unsigned,
+    foreign key (createBy) references User(id)
 );
 
-drop table Result;
+drop table if exists Result;
 create table Result(
     id int unsigned auto_increment primary key,
     userId int unsigned,
@@ -30,7 +31,7 @@ create table Result(
     foreign key (examId) references Exam(id)
 );
 
-drop table Open;
+drop table if exists Open;
 create table Open(
     id int unsigned auto_increment primary key,
     resultId int unsigned,
@@ -38,16 +39,7 @@ create table Open(
     foreign key (resultId) references Result(id)
 );
 
-drop table Choice;
-create table Choice
-(
-    id       int unsigned auto_increment primary key,
-    resultId int unsigned,
-    answerId int unsigned,
-    foreign key (resultId) references Result (id),
-    foreign key (answerId) references Answer (id)
-);
-drop table Question;
+drop table if exists Question;
 create table Question(
     id int unsigned auto_increment primary key,
     description text,
@@ -55,8 +47,7 @@ create table Question(
     type varchar(4), -- mult,sele,open
     foreign key (examId) references Exam(id) on delete cascade
 );
-
-drop table Answer;
+drop table if exists Answer;
 create table Answer(
     id int unsigned auto_increment primary key,
     description text,
@@ -64,6 +55,18 @@ create table Answer(
     isRight boolean,
     foreign key (questionId) references Question(id) on delete cascade
 );
+
+drop table if exists Choice;
+create table Choice
+(
+    id int unsigned auto_increment primary key,
+    resultId int unsigned,
+    answerId int unsigned,
+    foreign key (resultId) references Result (id),
+    foreign key (answerId) references Answer (id)
+);
+
+
 
 -- default data population for testing
 -- insert into Exam values
