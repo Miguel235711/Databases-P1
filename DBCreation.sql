@@ -4,9 +4,42 @@ create database dbp1;
 use dbp1;
 
 
+create table User(
+    id int unsigned auto_increment primary key,
+    handle varchar(15) unique,
+    email varchar(256),
+    type varchar(4) -- stud,tech
+);
+
 create table Exam(
     id int unsigned auto_increment primary key,
-    name text
+    name text,
+    userId int unsigned,
+    foreign key (userId) references User(id)
+);
+
+create table Result(
+    id int unsigned auto_increment primary key,
+    userId int unsigned,
+    examId int unsigned,
+    grade float,
+    foreign key (userId) references User(id),
+    foreign key (examId) references Exam(id)
+);
+
+create table Open(
+    id int unsigned auto_increment primary key,
+    resultId int unsigned,
+    content text,
+    foreign key (resultId) references Result(id)
+);
+
+create table Choice(
+    id int unsigned auto_increment primary key ,
+    resultId int unsigned,
+    answerId int unsigned,
+    foreign key (resultId) references Result(id),
+    foreign key (answerId) references Answer(id)
 );
 
 create table Question(
